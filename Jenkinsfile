@@ -1,39 +1,48 @@
 pipeline {
-  agent any
-  stages {
-    stage('Checkout Scm') {
-      steps {
-        git(credentialsId: 'akshaygithub', url: 'https://github.com/akshayit1992/springboot-maven-micro.git')
-      }
+    agent any
+
+    environment {
+        SONAR_TOKEN = credentials('9dd8e6c1f038df1d3d1f07a1dda65f16efd40e10')
     }
 
-    stage('Batch script 0') {
-      steps {
-        bat '''mvn package
-'''
-      }
+    stages {
+        stage('Checkout Scm') {
+            steps {
+                git(credentialsId: 'akshaygithub', url: 'https://github.com/akshayit1992/springboot-maven-micro.git')
+            }
+        }
+
+        stage('Batch script 0') {
+            steps {
+                bat 'mvn package'
+            }
+        }
+
+        stage('Batch script 1') {
+            steps {
+                bat 'mvn test'
+            }
+        }
+
+        stage('SonarCloud Analysis') {
+            steps {
+                // Execute SonarCloud scanner
+                withSonarQubeEnv('SonarCloud') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
     }
 
-    stage('Batch script 1') {
-      steps {
-        bat 'mvn test'
-      }
+    post {
+        always {
+            step(checksName: '', $class: 'JUnitResultArchiver', testResults: 'target\\surefire-reports\\*.xml', stdioRetention: 'ALL')
+            // Publish quality gate result to Jenkins
+            publishQualityGate()
+        }
     }
 
-    stage('No Converter-0') {
-      steps {
-        echo 'No converter for Builder: hudson.plugins.sonar.SonarRunnerBuilder'
-      }
+    triggers {
+        pollSCM('* * * * *')
     }
-
-  }
-  post {
-    always {
-      step(checksName: '', $class: 'JUnitResultArchiver', testResults: 'target\\surefire-reports\\*.xml', stdioRetention: 'ALL')
-    }
-
-  }
-  triggers {
-    pollSCM('* * * * *')
-  }
 }
