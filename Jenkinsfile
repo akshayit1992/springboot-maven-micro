@@ -28,7 +28,7 @@ pipeline {
             steps {
                 // Execute SonarCloud scanner
                withSonarQubeEnv(credentialsId: 'sonarqjenkins', installationName: 'akshaysonarq') {
-                    sh 'mvn sonar:sonar'
+                     bat 'sonar-scanner sonar-project.properties'
                 }
             }
         }
