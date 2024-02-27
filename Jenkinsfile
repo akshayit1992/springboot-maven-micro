@@ -27,7 +27,7 @@ pipeline {
         stage('SonarCloud Analysis') {
             steps {
                 // Execute SonarCloud scanner
-                withSonarQubeEnv('SonarCloud') {
+               withSonarQubeEnv(credentialsId: 'sonarqjenkins', installationName: 'akshaysonarq') {
                     sh 'mvn sonar:sonar'
                 }
             }
