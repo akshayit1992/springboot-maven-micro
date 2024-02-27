@@ -26,7 +26,6 @@ pipeline {
 
         stage('SonarCloud Analysis') {
             steps {
-                // Execute SonarCloud scanner
                withSonarQubeEnv(credentialsId: 'sonarqjenkins', installationName: 'akshaysonarq') {
                      bat 'sonar-scanner sonar-project.properties'
                 }
@@ -37,7 +36,6 @@ pipeline {
     post {
         always {
             step(checksName: '', $class: 'JUnitResultArchiver', testResults: 'target\\surefire-reports\\*.xml', stdioRetention: 'ALL')
-            // Publish quality gate result to Jenkins
             publishQualityGate()
         }
     }
