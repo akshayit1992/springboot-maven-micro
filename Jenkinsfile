@@ -33,12 +33,7 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            step(checksName: '', $class: 'JUnitResultArchiver', testResults: 'target\\surefire-reports\\*.xml', stdioRetention: 'ALL')
-            publishQualityGate()
-        }
-    }
+  
 
     triggers {
         pollSCM('* * * * *')
