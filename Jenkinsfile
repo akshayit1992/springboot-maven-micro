@@ -1,7 +1,8 @@
 pipeline {
     agent any
 
-
+    environment {
+        SONAR_TOKEN = credentials('sonarqjenkins')
     }
 
     stages {
@@ -23,15 +24,16 @@ pipeline {
             }
         }
 
-
-
-                
-
-         
+        stage('SonarCloud Analysis') {
+            steps {
+               withSonarQubeEnv(credentialsId: 'sonarqjenkins', installationName: 'akshaysonarq') {
+                     bat 'sonar-scanner sonar-project.properties'
+                }
+            }
         }
     }
 
-  
+
 
     triggers {
         pollSCM('* * * * *')
