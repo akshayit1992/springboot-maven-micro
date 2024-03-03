@@ -25,9 +25,10 @@ pipeline {
         }
 
         stage('SonarCloud Analysis') {
-            steps {
-               withSonarQubeEnv(credentialsId: 'sonarqjenkins', installationName: 'akshaysonarq') {
-                     bat 'sonar-scanner sonar-project.properties'
+              steps {
+    withSonarQubeEnv(credentialsId: 'sonarqjenkins', installationName: 'akshaysonarq') {
+      bat "sonar-scanner -Dsonar.projectKey=akshayit1992_springboot-maven-micro -Dsonar.sources=src"
+
                 }
             }
         }
