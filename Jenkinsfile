@@ -27,7 +27,8 @@ pipeline {
         stage('SonarCloud Analysis') {
             steps {
                withSonarQubeEnv(credentialsId: 'sonarqjenkins', installationName: 'akshaysonarq') {
-                     bat 'sonar-scanner sonar-project.properties'
+                       bat "mvn sonar:sonar"
+                     //bat 'sonar-scanner sonar-project.properties'
                 }
             }
         }
